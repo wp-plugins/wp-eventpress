@@ -1,0 +1,27 @@
+.dg-notice.updated{
+	background: #00b7ea;
+	color: #fff;
+	border: none !important;
+	position: relative;
+	text-align: justify;
+	padding-bottom: 20px;
+}
+
+.dg-dismiss{
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+.dg-dismiss a{
+	color: #fff;
+	text-decoration: underline;
+}
+
+.star-icons a{
+	text-decoration: none;
+}
+
+.centerAlign{
+	text-align: center;
+}
