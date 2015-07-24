@@ -1,0 +1,36 @@
+/* General Demo Style */
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+.fc-calendar div,
+.fc-row div:after,
+.fc-row div:before{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+.cal_event{
+	position: absolute;;
+	bottom: 0;
+	left: 0;
+}
+
+.cal_event a{
+	font-size: 12px !important;
+	text-decoration: underline !important;
+}
+
+.cal_nav{
+	overflow: hidden;;
+	margin-bottom: 20px;
+}
+
+.cal_prev{
+	float: left;
+}
+
+.cal_next{
+	float: right;
+}
