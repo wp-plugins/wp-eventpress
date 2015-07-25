@@ -3,14 +3,14 @@
  * Options class for DG plugins
  */
 
-if( ! class_exists( 'DG_Options' ) ){
+if( ! class_exists( 'EP_Options' ) ){
 
 	/**
 	 * Options class
 	 *
 	 * @since 1.0
 	 */
-	class DG_Options{
+	class EP_Options{
 
 		/**
 		 * Plugin Key Name

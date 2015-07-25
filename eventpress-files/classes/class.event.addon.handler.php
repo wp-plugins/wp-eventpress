@@ -33,7 +33,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 * @access private
 		 */
 		private function __construct () {
-			define( 'AEM_EVENTS_ADDONS_DIR', AEM_FILES_DIR . '/lib/addons' );
+			define( 'EP_EVENTS_ADDONS_DIR', EP_FILES_DIR . '/lib/addons' );
 			$this->_load_active_addons();
 
 		}
@@ -62,9 +62,9 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 */
 		private function _add_hooks () {
 
-			add_action( 'aem_event_addons_list', array( &$this, 'aem_event_addons_list' ) );
-			add_action( 'admin_action_activate_aem_addon', array( &$this, 'activate_aem_addon_cb' ) );
-			add_action( 'admin_action_deactivate_aem_addon', array( &$this, 'deactivate_aem_addon_cb' ) );
+			add_action( 'ep_event_addons_list', array( &$this, 'ep_event_addons_list' ) );
+			add_action( 'admin_action_activate_ep_addon', array( &$this, 'activate_ep_addon_cb' ) );
+			add_action( 'admin_action_deactivate_ep_addon', array( &$this, 'deactivate_ep_addon_cb' ) );
 
 		}
 
@@ -79,7 +79,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 */
 		public static function get_all_addons () {
 
-			$all = glob( AEM_EVENTS_ADDONS_DIR . '/*.php' );
+			$all = glob( EP_EVENTS_ADDONS_DIR . '/*.php' );
 			$all = $all ? $all : array();
 			$ret = array();
 			foreach( $all as $path ) {
@@ -103,7 +103,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		public static function addon_to_path( $addon ) {
 
 			$addon = str_replace('/', '_', $addon);
-			return AEM_EVENTS_ADDONS_DIR . '/' . "{$addon}.php";
+			return EP_EVENTS_ADDONS_DIR . '/' . "{$addon}.php";
 
 		}
 
@@ -121,7 +121,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 			foreach( $active as $addon ) {
 				$path = self::addon_to_path( $addon );
 				if ( ! file_exists( $path ) ) continue;
-				else @require_once( $path );
+				else require_once( $path );
 			}
 
 		}
@@ -197,7 +197,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 * @access public
 		 *
 		 */
-		public function aem_event_addons_list() {
+		public function ep_event_addons_list() {
 
 			$all = self::get_all_addons();
 			$active = self::get_active_addons();
@@ -229,9 +229,9 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 						<td>
 							<?php echo $addon_data['Name'] ?><br>
 							<?php if( $is_active ) { ?>
-								<a class="active" href="<?php echo admin_url( 'admin.php?action=deactivate_aem_addon&addon=' . $addon ) ?>"><?php _e( 'Deactivate', 'eventpress' ) ?></a>
+								<a class="active" href="<?php echo admin_url( 'admin.php?action=deactivate_ep_addon&addon=' . $addon ) ?>"><?php _e( 'Deactivate', 'eventpress' ) ?></a>
 							<?php }else{ ?>
-								<a href="<?php echo admin_url( 'admin.php?action=activate_aem_addon&addon=' . $addon ) ?>"><?php _e( 'Activate', 'eventpress' ) ?></a>
+								<a href="<?php echo admin_url( 'admin.php?action=activate_ep_addon&addon=' . $addon ) ?>"><?php _e( 'Activate', 'eventpress' ) ?></a>
 							<?php } ?>
 						</td>
 						<td>
@@ -255,7 +255,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 * @access public
 		 *
 		 */
-		public function activate_aem_addon_cb() {
+		public function activate_ep_addon_cb() {
 
 			if( ! current_user_can( 'manage_options' ) ) return false;
 
@@ -270,7 +270,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 
 			}
 
-			wp_redirect( admin_url( 'admin.php?page=aem-events-settings&tab=addons&notice_result=updated&msg=' . __( 'Addon+activated+successfully.', 'eventpress' ) ) );
+			wp_redirect( admin_url( 'edit.php?post_type=ep_events&page=event-settings&tab=addons&tab=addons&notice_result=updated&msg=' . __( 'Addon+activated+successfully.', 'eventpress' ) ) );
 
 		}
 
@@ -282,7 +282,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 		 * @access public
 		 *
 		 */
-		public function deactivate_aem_addon_cb() {
+		public function deactivate_ep_addon_cb() {
 
 			if( ! current_user_can( 'manage_options' ) ) return false;
 
@@ -301,7 +301,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 
 			}
 
-			wp_redirect( admin_url( 'admin.php?page=aem-events-settings&tab=addons&notice_result=updated&msg=' . __( 'Addon+deactivated+successfully.', 'eventpress' ) ) );
+			wp_redirect( admin_url( 'edit.php?post_type=ep_events&page=event-settings&tab=addons&tab=addons&notice_result=updated&msg=' . __( 'Addon+deactivated+successfully.', 'eventpress' ) ) );
 
 		}
 
@@ -309,5 +309,7 @@ if( ! class_exists( 'AEM_EVENT_ADDON_HANDLER' ) ){
 
 
 	}
+	
+	AEM_EVENT_ADDON_HANDLER::serve();
 
 }

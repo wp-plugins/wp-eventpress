@@ -24,7 +24,7 @@
 	// Default TimePicker Selection
 	$('.dg_timepicker').timepicker();
 
-	$('p.event_instance_chooser input').click(function() {
+	$('input.event_instance_chooser').click(function() {
 
 		var val = $(this).val(),
 			_className = val + '_event_meta';

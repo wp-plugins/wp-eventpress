@@ -34,8 +34,8 @@ if( ! class_exists( 'EP_Tickets' ) ){
 		 */
 		public function __construct(){
 
-			$aem = new DG_Options( 'aem', '' );
-			$this->_data = $aem->get_options();global $post;
+			$aem = new EP_Options( 'ep', '' );
+			$this->_data = $aem->get_options();
 
 		}
 

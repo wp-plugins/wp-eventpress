@@ -5,14 +5,14 @@
  */
 if ( ! defined( 'ABSPATH' ) ) wp_die( __( DG_HACK_MSG, 'eventpress' ) );
 
-if( ! class_exists( 'DG_Event' ) ){
+if( ! class_exists( 'EP_Event' ) ){
 
 	/**
 	 * The event class that should hold all properties, methods of a single event
 	 *
 	 * @since 1.0
 	 */
-	class DG_Event{
+	class EP_Event{
 
 
 		/**
@@ -26,6 +26,15 @@ if( ! class_exists( 'DG_Event' ) ){
 
 
 		/**
+		 * Eventpress Object
+		 *
+		 * @since 1.0
+		 * @access private
+		 * @var OBJECT
+		 */
+		private $eventpress;
+                
+                /**
 		 * Event
 		 *
 		 * @since 1.0
@@ -275,6 +284,8 @@ if( ! class_exists( 'DG_Event' ) ){
 		 */
 		public function __construct( $id ){
 
+                        global $eventpress;
+                
 			if( ! $id ) $id = get_the_ID();
 			if( ! $id ) return;
 
@@ -282,6 +293,8 @@ if( ! class_exists( 'DG_Event' ) ){
 			$this->can_rsvp = true;
 			$this->_event = get_post( $id );
 			$this->get_post_meta();
+                        $this->eventpress = $eventpress;
+                        $this->rsvp = $this->guest_list();
 
 		}
 
@@ -465,7 +478,7 @@ if( ! class_exists( 'DG_Event' ) ){
 		 * @since 1.0
 		 * @access public
 		 *
-		 * @return STRING Paid or Free
+		 * @return STRING Post type of event
 		 */
 		public function get_type () {
 
@@ -587,15 +600,37 @@ if( ! class_exists( 'DG_Event' ) ){
 		 * @since 1.0
 		 * @access public
 		 *
+		 * @param $user_id INT ID of the USER
 		 * @return BOOL TRUE | FALSE
 		 */
-		public function is_user_going() {
-
-			if( in_array( get_current_user_id(), $this->rsvp ) )
-				return true;
-			return false;
-
+		public function is_user_going( $user_id ) {
+                    if( $user_id == '' ) $user_id = get_current_user_id();
+                    $query = "SELECT user_id FROM {$this->eventpress->event_tbl} WHERE event_id = '{$this->ID}'";
+                    $users = $this->eventpress->_db->get_results( $query, ARRAY_A );
+                    foreach( $users as $user ){
+                        if( $user['user_id'] == $user_id ) return true;
+                    }
+                    return false;
 		}
+                
+                /**
+                 * Get guest list of an event
+                 *
+                 * @since 1.0.0
+                 * @access public
+                 *
+                 * @return ARRAY array of guest users' IDs
+                 */
+                public function guest_list() {
+                    $guests = array();
+                    $query = "SELECT user_id FROM {$this->eventpress->event_tbl} WHERE event_id = '{$this->ID}'";
+                    $users = $this->eventpress->_db->get_results( $query, ARRAY_A );
+                    foreach( $users as $user ){
+                        array_push( $guests, $user['user_id'] );
+                    }
+                    return $guests;
+                }
+                
 
 
 	}

@@ -3,8 +3,8 @@ Contributors: duogeek
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VZB6MW3L4F526
 Tags: event, manager, management, wordpress events, events manager, events management, best event manager, simple event manager, event calendar, events calendar
 Requires at least: 3.5
-Tested up to: 4.2
-Stable tag: 1.4.2
+Tested up to: 4.3
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,5 +78,8 @@ We also have full documentation for developing addons for EventPress. Wanna cust
 
 
 == Changelog ==
+= 1.0.0 (26.07.15) =
+* Major release
+
 = 0.9.1 =
 * Initial release

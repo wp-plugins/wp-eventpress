@@ -75,7 +75,7 @@ if( ! class_exists( 'EP_Gmap' ) ){
 		 */
 		public function __construct(){
 
-			$aem = new DG_Options( 'aem', '' );
+			$aem = new EP_Options( 'ep', '' );
 			$this->_data = $aem->get_options();
 
 		}
@@ -100,8 +100,8 @@ if( ! class_exists( 'EP_Gmap' ) ){
 			if( ! in_array( $hook, array( "post-new.php", "post.php", "edit.php" ) ) ) return false;
 
 			global $post;
-			$event = new DG_Event( $post->ID );
-			wp_enqueue_script( 'ep-locationpicker', AEM_FILES_URI . '/assets/js/locationpicker.jquery.js' );
+			$event = new EP_Event( $post->ID );
+			wp_enqueue_script( 'ep-locationpicker', EP_FILES_URI . '/assets/js/locationpicker.jquery.js' );
 
 			if( isset( $event->lat ) )
 				wp_localize_script( 'ep-locationpicker', 'epcords', array( 'gmaplat' => ( float ) $event->lat, 'gmaplong' => ( float ) $event->long ) );
@@ -122,11 +122,11 @@ if( ! class_exists( 'EP_Gmap' ) ){
 			add_filter( 'ep_event_settings_save_before', array( &$this, 'ep_event_settings_save_before_cb' ), 99, 1 );
 			add_action( 'add_meta_boxes', array( &$this, 'gmap_lat_lang_meta' ) );
 			add_action( 'wp_footer', array( &$this, 'map_style' ) );
-			wp_enqueue_script( 'ep-gmap-api', '//maps.google.com/maps/api/js?sensor=false&libraries=places' );
+			add_action( 'wp_enqueue_script', array( &$this, 'ad_gmap_script' ) );
 			add_action( 'admin_enqueue_scripts', array( &$this, 'ep_gmap_scripts') );
-
-
-			if( $this->_data['map_before_content'] == 1 ){
+			wp_enqueue_script( 'ep-gmap-api', '//maps.google.com/maps/api/js?sensor=false&libraries=places', '', false );
+			
+			if( isset( $this->_data['map_before_content'] ) && $this->_data['map_before_content'] == 1 ){
 				add_action( 'ep_before_single_content', array( &$this, 'show_event_location_map' ) );
 			}else{
 				add_action( 'ep_after_single_content', array( &$this, 'show_event_location_map' ) );
@@ -134,7 +134,7 @@ if( ! class_exists( 'EP_Gmap' ) ){
 
 
 		}
-
+		
 
 		/**
 		 * Settings data for GMap add on
@@ -153,7 +153,7 @@ if( ! class_exists( 'EP_Gmap' ) ){
 						<tr>
 							<th><?php _e( 'Show Map before the content?', 'eventpress' ) ?></th>
 							<td>
-								<input <?php checked( isset( $this->_data['map_before_content'] ) ? $this->_data['map_before_content'] : 0, 1, true ) ?> type="checkbox" name="aem[map_before_content]" value="1">
+								<input <?php checked( isset( $this->_data['map_before_content'] ) ? $this->_data['map_before_content'] : 0, 1, true ) ?> type="checkbox" name="ep[map_before_content]" value="1">
 								<?php _e( 'Yes', 'eventpress' ) ?>
 							</td>
 						</tr>
@@ -173,10 +173,10 @@ if( ! class_exists( 'EP_Gmap' ) ){
 		 * @since 1.0
 		 * @access public
 		 */
-		public function ep_event_settings_save_before_cb( $aem ){
+		public function ep_event_settings_save_before_cb( $ep ){
 
-			if( ! isset( $aem['map_before_content'] ) ) $aem['map_before_content'] = 0;
-			return $aem;
+			if( ! isset( $ep['map_before_content'] ) ) $ep['map_before_content'] = 0;
+			return $ep;
 
 		}
 
@@ -192,7 +192,7 @@ if( ! class_exists( 'EP_Gmap' ) ){
 		public function gmap_lat_lang_meta() {
 
 			global $eventpress;
-			add_meta_box( __( 'gmap_lat_lang', 'eventpress' ), 'GMap Settings', array( &$this, 'gmap_lat_lang_cb' ), $eventpress->post_type['post_type'], 'normal', 'default' );
+			add_meta_box( __( 'gmap_lat_lang', 'eventpress' ), 'GMap Settings', array( &$this, 'gmap_lat_lang_cb' ), $eventpress->post_type, 'normal', 'default' );
 
 		}
 
@@ -207,7 +207,7 @@ if( ! class_exists( 'EP_Gmap' ) ){
 		 */
 		public function gmap_lat_lang_cb( $post ) {
 
-			$event = new DG_Event( $post->ID );
+			$event = new EP_Event( $post->ID );
 
 			wp_nonce_field( 'ep_gmap_meta_box', 'ep_gmap_meta_box_nonce' );
 			?>
@@ -253,12 +253,18 @@ if( ! class_exists( 'EP_Gmap' ) ){
 		public function show_event_location_map() {
 
 			global $post;
-			$event = new DG_Event( $post->ID );
+			$event = new EP_Event( $post->ID );
 
 			if( isset($event->zoom_map) && $event->zoom_map == '' ) $event->zoom_map = 14;
 
 			if( isset($event->lat) && $event->lat != '' && isset($event->long) && $event->long != '' ) {
 			?>
+			<div class="dg-row dg-top-space dg-eventpress-single-description">
+				<div class="dg-col-md-12">
+					<p class="dg-eventpress-title">Event <span class="dg-eventpress-red">Location</span></p>
+					<p><?php echo $event->location; ?></p>
+				</div>
+			</div>
 			<div class="dg-row dg-eventpress-single-featured">
 			<div class="dg-col-md-12">
 			<script type="text/javascript">

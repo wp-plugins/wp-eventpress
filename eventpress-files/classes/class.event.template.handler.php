@@ -5,14 +5,14 @@
  */
 if( ! defined( 'ABSPATH' ) ) wp_die( __( DG_HACK_MSG, 'eventpress' ) );
 
-if( ! class_exists( 'EP_EVENT_TEMPLATE_HANDLER' ) ) {
+if( ! class_exists( 'EP_Event_Template_Handler' ) ) {
 
 	/**
 	 * Template Handler Class
 	 *
 	 * @since 1.0
 	 */
-	class EP_EVENT_TEMPLATE_HANDLER {
+	class EP_Event_Template_Handler {
 
 		/**
 		 * Class constructor
@@ -42,7 +42,7 @@ if( ! class_exists( 'EP_EVENT_TEMPLATE_HANDLER' ) ) {
 
 				$child_theme = get_stylesheet_directory() . '/eventpress/' . $single_template_file;
 				$parent_theme = get_template_directory() . '/eventpress/' . $single_template_file;
-				$plugin_theme = AEM_FILES_DIR . '/templates/' . $single_template_file;
+				$plugin_theme = EP_FILES_DIR . '/templates/' . $single_template_file;
 
 				if( file_exists( $child_theme ) ){
 					$single_template = $child_theme;
@@ -80,7 +80,7 @@ if( ! class_exists( 'EP_EVENT_TEMPLATE_HANDLER' ) ) {
 
 				$child_theme = get_stylesheet_directory() . '/eventpress/' . $archive_template_file;
 				$parent_theme = get_template_directory() . '/eventpress/' . $archive_template_file;
-				$plugin_theme = AEM_FILES_DIR . '/templates/' . $archive_template_file;
+				$plugin_theme = EP_FILES_DIR . '/templates/' . $archive_template_file;
 
 				if( file_exists( $child_theme ) ){
 					$archive_template = $child_theme;
@@ -118,7 +118,7 @@ if( ! class_exists( 'EP_EVENT_TEMPLATE_HANDLER' ) ) {
 
 				$child_theme = get_stylesheet_directory() . '/eventpress/' . $monthly_calendar_template_file;
 				$parent_theme = get_template_directory() . '/eventpress/' . $monthly_calendar_template_file;
-				$plugin_theme = AEM_FILES_DIR . '/templates/' . $monthly_calendar_template_file;
+				$plugin_theme = EP_FILES_DIR . '/templates/' . $monthly_calendar_template_file;
 
 				if( file_exists( $child_theme ) ){
 					$monthly_calendar_template = $child_theme;

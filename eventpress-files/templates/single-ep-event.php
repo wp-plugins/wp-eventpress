@@ -12,7 +12,7 @@ get_header(); ?>
 	<div id="content" role="main">
 
 		<?php while ( have_posts() ) : the_post(); ?>
-			<?php $event = new DG_Event( get_the_ID() ); ?>
+			<?php $event = new EP_Event( get_the_ID() ); ?>
 			<div class="dg-eventpress">
 
 				<?php do_action( 'ep_before_single', $event ); ?>
@@ -25,16 +25,16 @@ get_header(); ?>
 
 					<div class="dg-col-md-3 dg-col-sm-12 dg-text-right dg-eventpress-single-action">
 						<?php if( ! is_user_going() ) { ?>
-							<?php if( apply_filters( 'ep_allow_join_rsvp', $event->can_rsvp, 1 ) == true ) { ?>
+							<?php if( apply_filters( 'ep_allow_join_rsvp', $event->can_rsvp ) == true ){ ?>
 							<button type="button" class="dg-btn dg-btn-primary dg-btn-sm dg-btn-block ep-event-join">
-							<?php echo apply_filters( 'epeevent_join_text', __( 'Join Now', 'eventpress' ) ) ?>
+							<?php echo apply_filters( 'epeevent_join_text', __( 'Join Now', 'ep' ) ) ?>
 							</button>
 							<?php }else{
-								_e( 'Sorry! There is no ticket available', 'eventpress' );
+								_e( 'Sorry! There is no ticket available', 'ep' );
 								} ?>
 						<?php }else{ ?>
 						<button type="button" class="dg-btn dg-btn-primary dg-btn-sm dg-btn-block ep-event-join-cancel">
-						<?php echo apply_filters( 'ep_event_join_text', __( 'Cancel Event', 'eventpress' ) ) ?>
+						<?php echo apply_filters( 'ep_event_cancel_text', __( 'Cancel Event', 'ep' ) ) ?>
 						</button>
 						<?php } ?>
 					</div>
@@ -61,7 +61,7 @@ get_header(); ?>
 							<div class="dg-col-md-2 dg-text-center dg-eventpress-datetime-icon">
 								<i class="fa fa-calendar"></i>
 							</div>
-							<div class="dg-col-md-10 dg-text-center dg-eventpress-datetime-details"><p><?php echo $event->start_date . ' - ' . $event->end_date; ?></p></div>
+							<div class="dg-col-md-10 dg-text-center dg-eventpress-datetime-details"><p><?php echo get_date_time_value( strtotime( $event->start_date ) ) . ' - ' . get_date_time_value( strtotime( $event->end_date ) ); ?></p></div>
 						</div>
 					</div>
 					<div class="dg-col-md-6 dg-eventpress-single-time">
@@ -72,23 +72,17 @@ get_header(); ?>
 							<div class="dg-col-md-2 dg-text-center dg-eventpress-datetime-icon">
 								<i class="fa fa-clock-o"></i>
 							</div>
-							<div class="dg-col-md-10 dg-text-center dg-eventpress-datetime-details"><p><?php echo date("g:i a", strtotime($event->start_time) ) . ' - ' . date("g:i a", strtotime($event->end_time) ); ?></p></div>
+							<div class="dg-col-md-10 dg-text-center dg-eventpress-datetime-details"><p><?php echo get_date_time_value( strtotime( $event->start_time ), false, true ) . ' - ' . get_date_time_value( strtotime( $event->end_time ), false, true ); ?></p></div>
 						</div>
 					</div>
 				</div>
 
-				<div class="dg-row dg-top-space dg-eventpress-single-description">
-					<div class="dg-col-md-12">
-						<p class="dg-eventpress-title">Event <span class="dg-eventpress-red">Location</span></p>
-						<p><?php echo $event->location; ?></p>
-					</div>
-				</div>
 
 				<?php do_action( 'ep_before_single_content', $event ); ?>
 
 				<div class="dg-row dg-top-space dg-eventpress-single-description">
 					<div class="dg-col-md-12">
-						<p class="dg-eventpress-title">Event <span class="dg-eventpress-red">Description</span></p>
+						<p class="dg-eventpress-title">Event <span class="dg-eventpress-red">Details</span></p>
 					</div>
 					<div class="dg-col-md-12">
 						<p><?php echo $event->get_content(); ?></p>
@@ -96,6 +90,28 @@ get_header(); ?>
 				</div>
 
 				<?php do_action( 'ep_after_single_content', $event ); ?>
+				
+				<div class="dg-row dg-top-space dg-eventpress-guests">
+					<div class="dg-col-md-12">
+						<p class="dg-eventpress-title">Guest <span class="dg-eventpress-red">List</span></p>
+						<ul>
+						<?php
+							$guests = $event->rsvp;
+							foreach( $guests as $guest ){
+								?>
+								<li>
+									<?php echo get_avatar( $guest, 64 ); ?><br>
+									<?php
+										$user = new WP_User( $guest );
+										echo $user->display_name;
+									?>
+								</li>
+								<?php
+							}
+						?>
+						</ul>
+					</div>
+				</div>
 
 
 			</div>

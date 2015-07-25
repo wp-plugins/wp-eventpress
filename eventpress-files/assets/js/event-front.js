@@ -1,4 +1,28 @@
 ;jQuery(function($) {
+	
+	$('.ep-event-join').click(function() {
+		if( obj.logged ){
+			var con = confirm( obj.join_text );
+			if( con ){
+				window.location.href = obj.event_url + '?ep_join_event=yes';
+			}
+		}else{
+			alert( obj.log_msg );
+			window.location.href = obj.login_url;
+		}
+	});
+	
+	$('.ep-event-join-cancel').click(function() {
+		var con = confirm( obj.cancel_text );
+		if( con ){
+			window.location.href = obj.event_url + '?ep_join_event_cancel=yes';
+		}
+	});
+	
+});
+
+/*
+;jQuery(function($) {
 
 	var reg_content = '';
 	reg_content += '<div class="dg-register">';
@@ -272,41 +296,5 @@
 
 	} );
 
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
